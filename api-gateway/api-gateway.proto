@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+option go_package = "./api";
+
+message RawMetricsRequestMessage {}
+
+message PreparedMetricsRequestMessage {
+  string fromTime = 1;
+  string toTime = 2;
+}
+
+message MetricsResponse {
+  float availability = 1;
+  float speed = 2;
+}
+
+service MetricsGetter {
+  rpc GetRawMetrics(RawMetricsRequestMessage) returns (MetricsResponse){}
+  rpc GetPreparedMetrics(PreparedMetricsRequestMessage) returns (MetricsResponse){}
+}
+
+
