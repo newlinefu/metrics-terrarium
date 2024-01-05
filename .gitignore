@@ -1,1 +1,7 @@
 .idea
+
+services/api-gateway/logs/*
+services/hardware-circuit-breaker/logs/*
+services/hardware-mimic/logs/*
+services/metrics-interpreter/logs/*
+services/metrics-manager/logs/*
