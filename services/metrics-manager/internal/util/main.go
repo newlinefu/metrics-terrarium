@@ -5,14 +5,14 @@ import (
 	"strconv"
 )
 
-func GetPreparedMetrics(rawMetrics *map[string]general_types.RawMetric) (float32, bool) {
+func GetPreparedMetrics(rawMetrics map[string]general_types.RawMetric) (float32, bool) {
 	var avgSpeed float32 = 0
 	var lastAvailability bool
 	index := 0
-	for _, metric := range *rawMetrics {
+	for _, metric := range rawMetrics {
 		index++
 		if metric.MetricName == "availability" {
-			if (len(*rawMetrics) - 1) == index {
+			if (len(rawMetrics) - 1) == index {
 				var err error
 				lastAvailability, err = strconv.ParseBool(metric.Value)
 				if err != nil {
@@ -28,10 +28,10 @@ func GetPreparedMetrics(rawMetrics *map[string]general_types.RawMetric) (float32
 			}
 		}
 	}
-	if len(*rawMetrics) == 0 {
+	if len(rawMetrics) == 0 {
 		return 0, lastAvailability
 	}
-	avgSpeed = avgSpeed / float32(len(*rawMetrics))
+	avgSpeed = avgSpeed / float32(len(rawMetrics))
 
 	return avgSpeed, lastAvailability
 }

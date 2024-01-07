@@ -17,7 +17,7 @@ type GrpcServerImpl struct {
 	api.UnimplementedMetricsGetterServer
 
 	dbConnection *sql.DB
-	rawMetrics   *map[string]general_types.RawMetric
+	rawMetrics   map[string]general_types.RawMetric
 }
 
 type Server struct {
@@ -28,7 +28,7 @@ type Server struct {
 type ServerProperties struct {
 	Config       *lib.Config
 	DbConnection *database.Db
-	RawMetrics   *map[string]general_types.RawMetric
+	RawMetrics   map[string]general_types.RawMetric
 }
 
 func (s *Server) Start(properties ServerProperties) {

@@ -19,7 +19,7 @@ func GetPreparedMetrics(req *api.PreparedMetricsRequestMessage, dbConnection *sq
 	}, err
 }
 
-func GetRawMetrics(rawMetrics *map[string]general_types.RawMetric) (*api.MetricsResponse, error) {
+func GetRawMetrics(rawMetrics map[string]general_types.RawMetric) (*api.MetricsResponse, error) {
 	avgSpeed, lastAvailability := util.GetPreparedMetrics(rawMetrics)
 	availabilityResponse := 0.0
 	if lastAvailability {

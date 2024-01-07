@@ -8,14 +8,14 @@ import (
 	"time"
 )
 
-func PrepareMetrics(connection *sql.DB, rawLifePeriod int, rawMetrics *map[string]general_types.RawMetric) {
+func PrepareMetrics(connection *sql.DB, rawLifePeriod int, rawMetrics map[string]general_types.RawMetric) {
 	for {
 		time.Sleep(time.Duration(rawLifePeriod) * time.Second)
 
 		avgSpeed, lastAvailability := util.GetPreparedMetrics(rawMetrics)
 
 		metrics_storage.AddPreparedMetric(connection, avgSpeed, lastAvailability, func() {
-			*rawMetrics = make(map[string]general_types.RawMetric)
+			rawMetrics = make(map[string]general_types.RawMetric)
 		})
 	}
 }

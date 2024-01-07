@@ -8,7 +8,7 @@ import (
 	"metricsTerrarium/services/metrics-manager/pkg/api"
 )
 
-func GetRawMetrics(rawMetrics *map[string]general_types.RawMetric) (*api.MetricsResponse, error) {
+func GetRawMetrics(rawMetrics map[string]general_types.RawMetric) (*api.MetricsResponse, error) {
 	log.Printf("Get Raw metrics request handled successfuly")
 
 	return metrics_service.GetRawMetrics(rawMetrics)

@@ -7,7 +7,8 @@ import (
 )
 
 type Kafka struct {
-	Consumer sarama.PartitionConsumer
+	Consumer     *sarama.Consumer
+	PartConsumer *sarama.PartitionConsumer
 }
 
 type KafkaProperties struct {
@@ -16,18 +17,20 @@ type KafkaProperties struct {
 
 func (k Kafka) Start(properties KafkaProperties) Kafka {
 	consumer, err := sarama.NewConsumer([]string{properties.Config.KafkaAddress}, nil)
+
 	if err != nil {
 		log.Fatalf("Failed to create consumer: %v", err)
 	} else {
 		log.Printf("Consumer created succesfully")
 	}
-	defer consumer.Close()
 	partConsumer, err := consumer.ConsumePartition("metrics", 0, sarama.OffsetNewest)
-	k.Consumer = partConsumer
+
+	k.Consumer = &consumer
+	k.PartConsumer = &partConsumer
+
 	if err != nil {
 		log.Fatalf("Failed to consume partition: %v", err)
 	}
-	defer partConsumer.Close()
 
 	return k
 }

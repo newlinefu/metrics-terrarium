@@ -35,7 +35,7 @@ func main() {
 		log.Fatalf("Error with logs initialization occured. Err: %s", err)
 	}
 
-	err = godotenv.Load("../.env")
+	err = godotenv.Load("../../.env")
 	if err != nil {
 		log.Fatalf("Error with env variables file definition. Err: %s", err)
 	}

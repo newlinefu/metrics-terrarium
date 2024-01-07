@@ -25,7 +25,5 @@ func (db Db) Start(properties DbProperties) Db {
 		log.Printf("Connection to database created succesfully")
 	}
 
-	defer db.Connection.Close()
-
 	return db
 }
