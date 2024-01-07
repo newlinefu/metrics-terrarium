@@ -21,6 +21,7 @@ type TimeBracket struct {
 type MetricsResponse struct {
 	Availability float32 `json:"availability"`
 	Speed        float32 `json:"speed"`
+	Type         string  `json:"type"`
 }
 
 var client api.MetricsGetterClient
@@ -48,7 +49,7 @@ func main() {
 	}
 	client = api.NewMetricsGetterClient(conn)
 
-	http.HandleFunc("/get-metrics", handleGetMetrics)
+	http.HandleFunc("/api/v1/get-metrics", handleGetMetrics)
 
 	err = http.ListenAndServe(config.ApiGatewayHTTPPort, nil)
 	if err != nil {
@@ -105,6 +106,7 @@ func handleGetMetrics(w http.ResponseWriter, r *http.Request) {
 	err = json.NewEncoder(w).Encode(MetricsResponse{
 		Availability: metrics.Availability,
 		Speed:        metrics.Speed,
+		Type:         metrics.Type,
 	})
 	if err != nil {
 		log.Printf("Error sending response. Err: %s\n", err)

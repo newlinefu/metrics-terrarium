@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/IBM/sarama"
 	"github.com/google/uuid"
+	"github.com/joho/godotenv"
 	"log"
 	"metricsTerrarium/lib"
 	"net/http"
@@ -15,19 +16,29 @@ var config *lib.Config
 var producer sarama.SyncProducer
 
 type AvailabilityMetricResponse struct {
-	Availability bool `json:"availability"`
+	Availability bool      `json:"availability"`
+	Timestamp    time.Time `json:"timestamp"`
 }
 
 type SpeedMetricResponse struct {
-	Speed float32 `json:"speed"`
+	Speed     float32   `json:"speed"`
+	Timestamp time.Time `json:"timestamp"`
 }
 
 type MetricMessage struct {
 	MetricName string `json:"metric"`
 	Value      string `json:"value"`
+	Timestamp  string `json:"timestamp"`
 }
 
 func main() {
+
+	err := godotenv.Load("../../.env")
+	if err != nil {
+		log.Fatalf("Error with env variables file definition. Err: %s", err)
+	} else {
+		log.Printf("ENV variables initialized succesfully")
+	}
 
 	config = lib.CreateConfig()
 
@@ -63,13 +74,14 @@ func startHardwareCheck() {
 			if err != nil {
 				log.Printf("Error during speed metric decoding. Err: %s", err)
 			} else {
-				log.Printf("Speed metric recieved. Value is: %f", speedBody.Speed)
+				log.Printf("Speed metric recieved. Value is: %f | Time is: %s", speedBody.Speed, speedBody.Timestamp)
 
 				requestID := uuid.New().String()
 
 				bytes, err := json.Marshal(MetricMessage{
 					MetricName: "speed",
 					Value:      fmt.Sprintf("%f", speedBody.Speed),
+					Timestamp:  speedBody.Timestamp.Format(time.RFC3339),
 				})
 
 				msg := &sarama.ProducerMessage{
@@ -98,13 +110,14 @@ func startHardwareCheck() {
 			if err != nil {
 				log.Printf("Error during speed metric decoding. Err: %s", err)
 			} else {
-				log.Printf("Availability metric recieved. Value is: %f", availabilityBody.Availability)
+				log.Printf("Availability metric recieved. Value is: %v | Timestamp is %s", availabilityBody.Availability, availabilityBody.Timestamp)
 
 				requestID := uuid.New().String()
 
 				bytes, err := json.Marshal(MetricMessage{
 					MetricName: "availability",
 					Value:      fmt.Sprintf("%t", availabilityBody.Availability),
+					Timestamp:  availabilityBody.Timestamp.Format(time.RFC3339),
 				})
 
 				msg := &sarama.ProducerMessage{

@@ -27,10 +27,10 @@ func createAddMetricRecord() string {
 	`
 }
 
-func createAddAvailability(record_id int, lastAvailability bool) string {
+func createAddAvailability(record_id int, avgAvailability float32) string {
 	return `
 		INSERT INTO availability (record_id, availability_value)
-		VALUES (` + strconv.Itoa(record_id) + `, ` + strconv.FormatBool(lastAvailability) + `)
+		VALUES (` + strconv.Itoa(record_id) + `, ` + strconv.FormatFloat(float64(avgAvailability), 'f', 6, 32) + `)
 	`
 }
 

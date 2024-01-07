@@ -2,21 +2,25 @@ package main
 
 import (
 	"encoding/json"
+	"github.com/joho/godotenv"
 	"github.com/sony/gobreaker"
 	"log"
 	"metricsTerrarium/lib"
 	"net/http"
+	"time"
 )
 
 var cb *gobreaker.CircuitBreaker
 var config *lib.Config
 
 type AvailabilityMetricResponse struct {
-	Availability bool `json:"availability"`
+	Availability bool      `json:"availability"`
+	Timestamp    time.Time `json:"timestamp"`
 }
 
 type SpeedMetricResponse struct {
-	Speed float32 `json:"speed"`
+	Speed     float32   `json:"speed"`
+	Timestamp time.Time `json:"timestamp"`
 }
 
 func initCircuitBreaker() {
@@ -81,6 +85,14 @@ func HandleSpeedMetric(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+
+	err := godotenv.Load("../../.env")
+	if err != nil {
+		log.Fatalf("Error with env variables file definition. Err: %s", err)
+	} else {
+		log.Printf("ENV variables initialized succesfully")
+	}
+
 	config = lib.CreateConfig()
 
 	logFile, err := lib.SetupLogs()

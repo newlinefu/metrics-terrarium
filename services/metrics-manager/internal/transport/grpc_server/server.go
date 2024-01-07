@@ -18,6 +18,7 @@ type GrpcServerImpl struct {
 
 	dbConnection *sql.DB
 	rawMetrics   map[string]general_types.RawMetric
+	config       *lib.Config
 }
 
 type Server struct {
@@ -37,6 +38,7 @@ func (s *Server) Start(properties ServerProperties) {
 		UnimplementedMetricsGetterServer: api.UnimplementedMetricsGetterServer{},
 		dbConnection:                     properties.DbConnection.Connection,
 		rawMetrics:                       properties.RawMetrics,
+		config:                           properties.Config,
 	}
 
 	api.RegisterMetricsGetterServer(s.server, s.service)
@@ -58,7 +60,7 @@ func (s *Server) Start(properties ServerProperties) {
 // GRPC handlers
 
 func (s GrpcServerImpl) GetRawMetrics(context.Context, *api.RawMetricsRequestMessage) (*api.MetricsResponse, error) {
-	return metrics.GetRawMetrics(s.rawMetrics)
+	return metrics.GetRawMetrics(s.rawMetrics, s.config.RawLifePeriod)
 }
 
 func (s GrpcServerImpl) GetPreparedMetrics(ctx context.Context, req *api.PreparedMetricsRequestMessage) (*api.MetricsResponse, error) {

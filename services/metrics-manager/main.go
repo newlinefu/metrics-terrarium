@@ -14,13 +14,6 @@ import (
 
 var rawMetricsCache map[string]general_types.RawMetric
 
-// todo
-// 1. add env in all services
-// 2. add time to primary metrics
-// 3. add type to response
-// 4. time will be important in preparation step
-// 5. availability => down_time
-
 func main() {
 
 	rawMetricsCache = map[string]general_types.RawMetric{}

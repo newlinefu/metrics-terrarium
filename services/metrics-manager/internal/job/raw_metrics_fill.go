@@ -21,6 +21,7 @@ func ListenIncomingMetrics(kafka kafka_listener.Kafka, rawMetrics map[string]gen
 				delete(rawMetrics, msgKey)
 				log.Printf("Key %s in metrics cache map was replaced. Already exists", msgKey)
 			}
+
 			var rawMetric general_types.RawMetric
 
 			err := json.Unmarshal(msg.Value, &rawMetric)

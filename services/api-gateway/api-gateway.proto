@@ -12,6 +12,7 @@ message PreparedMetricsRequestMessage {
 message MetricsResponse {
   float availability = 1;
   float speed = 2;
+  string type = 3;
 }
 
 service MetricsGetter {
